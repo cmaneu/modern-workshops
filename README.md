@@ -1,4 +1,4 @@
-# Modern Workshopw
+# Modern Workshops
 
 Tools, Techniques and Samples to create modern, practical tech workshops.
 
