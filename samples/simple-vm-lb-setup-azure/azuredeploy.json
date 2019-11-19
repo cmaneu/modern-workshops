@@ -50,7 +50,7 @@
       },
       "imageSKU": {
         "type": "string",
-        "defaultValue": "2012-R2-Datacenter",
+        "defaultValue": "2019-Datacenter",
         "metadata": {
           "description": "Image SKU"
         }
@@ -85,7 +85,7 @@
       },
       "vmSize": {
         "type": "string",
-        "defaultValue": "Standard_D1",
+        "defaultValue": "Standard_DS1_v2",
         "metadata": {
           "description": "Size of the VM"
         }
