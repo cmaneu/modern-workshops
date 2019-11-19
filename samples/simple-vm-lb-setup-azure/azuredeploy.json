@@ -86,6 +86,42 @@
       "lbProbeID": "[concat(variables('lbID'),'/probes/tcpProbe')]"
     },
     "resources": [
+    {
+        "name": "nsg-httpssh",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2019-02-01",
+        "location": "[parameters('location')]",
+        "properties": {
+            "securityRules":  [
+                {
+                    "name": "SSH",
+                    "properties": {
+                        "priority": 300,
+                        "protocol": "Tcp",
+                        "access": "Allow",
+                        "direction": "Inbound",
+                        "sourceAddressPrefix": "*",
+                        "sourcePortRange": "*",
+                        "destinationAddressPrefix": "*",
+                        "destinationPortRange": "22"
+                    }
+                },
+                {
+                    "name": "HTTP",
+                    "properties": {
+                        "priority": 320,
+                        "protocol": "Tcp",
+                        "access": "Allow",
+                        "direction": "Inbound",
+                        "sourceAddressPrefix": "*",
+                        "sourcePortRange": "*",
+                        "destinationAddressPrefix": "*",
+                        "destinationPortRange": "80"
+                    }
+                }
+            ]
+        }
+    },
       {
         "type": "Microsoft.Storage/storageAccounts",
         "name": "[parameters('storageAccountName')]",
@@ -149,6 +185,7 @@
           "count": "[variables('numberOfInstances')]"
         },
         "dependsOn": [
+          "[concat('Microsoft.Network/virtualNetworks/', 'nsg-httpssh')]",
           "[concat('Microsoft.Network/virtualNetworks/', parameters('vnetName'))]",
           "[concat('Microsoft.Network/loadBalancers/', parameters('lbName'))]"
         ],
@@ -173,7 +210,10 @@
                 ]
               }
             }
-          ]
+          ],
+          "networkSecurityGroup": {
+              "id": "[resourceId(resourceGroup().name, 'Microsoft.Network/networkSecurityGroups/nsg-httpssh')]"
+          }
         }
       },
       {
@@ -202,26 +242,26 @@
           ],
           "inboundNatRules": [
             {
-              "name": "RDP-VM0",
+              "name": "SSH-VM0",
               "properties": {
                 "frontendIPConfiguration": {
                   "id": "[variables('frontEndIPConfigID')]"
                 },
                 "protocol": "Tcp",
-                "frontendPort": 50001,
-                "backendPort": 3389,
+                "frontendPort": 50211,
+                "backendPort": 21,
                 "enableFloatingIP": false
               }
             },
             {
-              "name": "RDP-VM1",
+              "name": "SSH-VM1",
               "properties": {
                 "frontendIPConfiguration": {
                   "id": "[variables('frontEndIPConfigID')]"
                 },
                 "protocol": "Tcp",
-                "frontendPort": 50002,
-                "backendPort": 3389,
+                "frontendPort": 50212,
+                "backendPort": 21,
                 "enableFloatingIP": false
               }
             }
@@ -288,9 +328,9 @@
           },
           "storageProfile": {
             "imageReference": {
-                "publisher": "MicrosoftWindowsServer",
-                "offer": "WindowsServer",
-                "sku": "2019-Datacenter",
+                "publisher": "Canonical",
+                "offer": "UbuntuServer",
+                "sku": "18.04-LTS",
                 "version": "latest"
             },
             "osDisk": {
