@@ -9,7 +9,7 @@
 <body>
     <h1>Azure Load Balancer Demo</h1>
     <p>
-    Current Server name: <code><pre><?php gethostname(); ?></pre></code>
+    Current Server name: <code><pre><?php echo gethostname(); ?></pre></code>
     </p>
 
     <?php phpinfo(); ?>

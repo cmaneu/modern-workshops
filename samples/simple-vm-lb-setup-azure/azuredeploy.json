@@ -192,7 +192,7 @@
           "count": "[variables('numberOfInstances')]"
         },
         "dependsOn": [
-          "[concat('Microsoft.Network/virtualNetworks/', 'nsg-httpssh')]",
+          "[concat('Microsoft.Network/networkSecurityGroups/', 'nsg-httpssh')]",
           "[concat('Microsoft.Network/virtualNetworks/', parameters('vnetName'))]",
           "[concat('Microsoft.Network/loadBalancers/', parameters('lbName'))]"
         ],
@@ -212,14 +212,14 @@
                 ],
                 "loadBalancerInboundNatRules": [
                   {
-                    "id": "[concat(variables('lbID'),'/inboundNatRules/RDP-VM', copyindex())]"
+                    "id": "[concat(variables('lbID'),'/inboundNatRules/SSH-VM', copyindex())]"
                   }
                 ]
               }
             }
           ],
           "networkSecurityGroup": {
-              "id": "[resourceId(resourceGroup().name, 'Microsoft.Network/networkSecurityGroups/nsg-httpssh')]"
+              "id": "[resourceId(resourceGroup().name, 'Microsoft.Network/networkSecurityGroups/', 'nsg-httpssh')]"
           }
         }
       },
@@ -255,8 +255,8 @@
                   "id": "[variables('frontEndIPConfigID')]"
                 },
                 "protocol": "Tcp",
-                "frontendPort": 50211,
-                "backendPort": 21,
+                "frontendPort": 50221,
+                "backendPort": 22,
                 "enableFloatingIP": false
               }
             },
@@ -267,8 +267,8 @@
                   "id": "[variables('frontEndIPConfigID')]"
                 },
                 "protocol": "Tcp",
-                "frontendPort": 50212,
-                "backendPort": 21,
+                "frontendPort": 50222,
+                "backendPort": 22,
                 "enableFloatingIP": false
               }
             }
