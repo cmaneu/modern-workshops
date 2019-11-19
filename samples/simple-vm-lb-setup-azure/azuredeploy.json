@@ -48,6 +48,13 @@
           "description": "Network Interface name prefix"
         }
       },
+      "location": {
+        "type": "string",
+        "defaultValue": "West Europe",
+        "metadata": {
+          "description": "Deployment location"
+        }
+      },
       "publicIPAddressName": {
         "type": "string",
         "defaultValue": "myPublicIP",
